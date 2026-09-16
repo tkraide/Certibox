@@ -4,15 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import { UserMenu } from "@/components/auth/user-menu";
 
 import { Brand } from "./brand";
 import { NAV_ITEMS, isNavItemActive } from "./nav-items";
 
-/**
- * Menu lateral (desktop, >= md).
- * - Item ativo sinalizado por cor + peso da fonte + barra lateral + aria-current
- *   (nunca apenas por cor).
- */
 export function Sidebar() {
   const pathname = usePathname();
 
@@ -74,8 +70,11 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <div className="border-t border-neutral-200 px-6 py-4 text-xs text-neutral-600 dark:border-neutral-800 dark:text-neutral-400">
-        Hackathon SeCoT XVIII · UFSCar
+      <div className="border-t border-neutral-200 px-6 py-4 dark:border-neutral-800">
+        <UserMenu className="flex-col items-start gap-2" />
+        <p className="mt-3 text-xs text-neutral-500 dark:text-neutral-500">
+          Hackathon SeCoT XVIII · UFSCar
+        </p>
       </div>
     </aside>
   );

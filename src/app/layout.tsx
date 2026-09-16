@@ -35,8 +35,6 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    // suppressHydrationWarning: o next-themes injeta a classe `dark` no <html>
-    // antes da hidratação para evitar flash de tema.
     <html lang="pt-BR" suppressHydrationWarning className={inter.variable}>
       <body className="min-h-dvh font-sans">
         <ThemeProvider>

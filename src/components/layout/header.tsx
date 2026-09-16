@@ -1,10 +1,7 @@
 import { Brand } from "@/components/navigation/brand";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { UserMenu } from "@/components/auth/user-menu";
 
-/**
- * Cabeçalho fixo. No mobile mostra a marca (a sidebar fica oculta);
- * no desktop mantém apenas as ações à direita.
- */
 export function Header() {
   return (
     <header
@@ -16,8 +13,9 @@ export function Header() {
       <Brand className="md:hidden" />
       <span className="hidden md:block" aria-hidden="true" />
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <ThemeToggle />
+        <UserMenu />
       </div>
     </header>
   );

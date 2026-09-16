@@ -3,12 +3,6 @@ import { Sidebar } from "@/components/navigation/sidebar";
 
 import { Header } from "./header";
 
-/**
- * Estrutura "Clean UI":
- * - Desktop: Sidebar fixa à esquerda + cabeçalho + conteúdo.
- * - Mobile: cabeçalho + conteúdo + Bottom Navigation fixa.
- * - Skip link para o conteúdo principal (WCAG 2.4.1).
- */
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh bg-neutral-50 dark:bg-neutral-950">
