@@ -91,12 +91,19 @@ export type PendingReviewGroup = {
   /** Token do link compartilhável do aluno — leva direto pra página de aprovação. */
   shareToken: string;
   pendingCount: number;
+  /** Quantos pendentes de cada categoria — usado pelo filtro por categoria na home do professor. */
+  pendingByCategory: Record<CategoryKey, number>;
 };
 
 type PendingCertificateRow = {
   aluno_id: string;
+  categoria_id: string;
   profiles: { nome: string | null; email: string; share_token: string } | null;
 };
+
+function emptyCategoryCounts(): Record<CategoryKey, number> {
+  return { complementares: 0, extensao: 0 };
+}
 
 /**
  * Lista, agrupados por aluno, todos os certificados com status "pendente" —
@@ -108,22 +115,35 @@ type PendingCertificateRow = {
 export async function listStudentsWithPendingCertificates(
   supabase: SupabaseClient,
 ): Promise<PendingReviewGroup[]> {
-  const { data, error } = await supabase
-    .from("certificates")
-    .select("aluno_id, profiles!certificates_aluno_id_fkey(nome, email, share_token)")
-    .eq("status", "pendente");
+  const [{ data, error }, categoryIds] = await Promise.all([
+    supabase
+      .from("certificates")
+      .select("aluno_id, categoria_id, profiles!certificates_aluno_id_fkey(nome, email, share_token)")
+      .eq("status", "pendente"),
+    getCategoryIds(supabase),
+  ]);
 
   if (error) throw error;
+
+  const categoryKeyById = new Map<string, CategoryKey>(
+    (Object.entries(categoryIds) as [CategoryKey, string][]).map(([key, id]) => [id, key]),
+  );
 
   const groups = new Map<string, PendingReviewGroup>();
   for (const row of (data ?? []) as unknown as PendingCertificateRow[]) {
     if (!row.profiles) continue;
 
+    const categoryKey = categoryKeyById.get(row.categoria_id) ?? "complementares";
+
     const existing = groups.get(row.aluno_id);
     if (existing) {
       existing.pendingCount += 1;
+      existing.pendingByCategory[categoryKey] += 1;
       continue;
     }
+
+    const pendingByCategory = emptyCategoryCounts();
+    pendingByCategory[categoryKey] = 1;
 
     groups.set(row.aluno_id, {
       studentId: row.aluno_id,
@@ -131,6 +151,7 @@ export async function listStudentsWithPendingCertificates(
       email: row.profiles.email,
       shareToken: row.profiles.share_token,
       pendingCount: 1,
+      pendingByCategory,
     });
   }
 
