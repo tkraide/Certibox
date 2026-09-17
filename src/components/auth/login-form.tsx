@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Chrome, Eye, EyeOff, GraduationCap, Loader2 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
   const [email, setEmail] = useState("");
@@ -17,7 +18,16 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [loadingSiga, setLoadingSiga] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // Se o callback do OAuth (`/auth/callback`) falhou e redirecionou de volta
+  // pra cá com "?error=auth", mostra o aviso já na primeira renderização —
+  // sem isso, a tela simplesmente "voltava pro login" sem nenhuma pista de
+  // que algo deu errado (foi assim que o problema no Google login pelo
+  // celular passou despercebido).
+  const [error, setError] = useState<string | null>(
+    searchParams.get("error") === "auth"
+      ? "Não foi possível concluir o login com Google. Tente novamente ou use o SIGA (simulado) abaixo."
+      : null,
+  );
 
   async function handleGoogleLogin() {
     setLoadingGoogle(true);
