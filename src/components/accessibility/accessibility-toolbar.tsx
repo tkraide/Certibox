@@ -82,7 +82,7 @@ export function AccessibilityToolbar({ className }: AccessibilityToolbarProps) {
           id={panelId}
           role="group"
           aria-label="Configurações de acessibilidade"
-          className="absolute right-0 z-50 mt-2 w-64 space-y-3 rounded-xl border border-neutral-200 bg-white p-4 shadow-card dark:border-neutral-800 dark:bg-neutral-900"
+          className="fixed inset-x-4 top-[4.5rem] z-50 max-h-[calc(100vh-6rem)] space-y-3 overflow-y-auto rounded-xl border border-primary-500 bg-white p-4 shadow-card dark:border-primary-400 dark:bg-neutral-900 sm:absolute sm:inset-x-auto sm:top-auto sm:right-0 sm:mt-2 sm:max-h-none sm:w-64 sm:overflow-visible"
         >
           <div>
             <p
