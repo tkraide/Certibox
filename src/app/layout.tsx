@@ -37,6 +37,31 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning className={inter.variable}>
       <body className="min-h-dvh font-sans">
+        {/*
+          Aplica as preferências salvas da Toolbar de acessibilidade (fonte,
+          alto contraste, redução de movimento) ANTES da hidratação — mesma
+          ideia do script anti-flash que o next-themes usa para o tema
+          claro/escuro, evitando que a página pisque no padrão antes de
+          aplicar o que o usuário escolheu (ver use-accessibility-prefs.ts).
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                try {
+                  var scale = localStorage.getItem("certibox:font-scale");
+                  if (scale) document.documentElement.style.setProperty("--font-scale", scale);
+                  if (localStorage.getItem("certibox:high-contrast") === "1") {
+                    document.documentElement.setAttribute("data-contrast", "high");
+                  }
+                  if (localStorage.getItem("certibox:reduce-motion") === "1") {
+                    document.documentElement.classList.add("reduce-motion");
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <ThemeProvider>
           <AppShell>{children}</AppShell>
         </ThemeProvider>

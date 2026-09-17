@@ -4,16 +4,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
-import { NAV_ITEMS, isNavItemActive } from "./nav-items";
+import { getNavItemsForRole, isNavItemActive } from "./nav-items";
 
 /**
  * Barra de navegação inferior (mobile, < md).
  * - Alvos de toque >= 44px, ícone + texto sempre visíveis.
  * - Respeita a safe-area de dispositivos com notch/gesture bar.
+ * - Número de colunas acompanha a quantidade de itens do papel logado
+ *   (aluno vê 5, professor vê 3), por isso o grid usa `gridTemplateColumns`
+ *   em vez de uma classe fixa como `grid-cols-5`.
  */
 export function BottomNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
+  const items = getNavItemsForRole(user?.role);
 
   return (
     <nav
@@ -24,8 +30,11 @@ export function BottomNav() {
         "pb-[env(safe-area-inset-bottom)]",
       )}
     >
-      <ul className="grid h-bottom-nav grid-cols-4">
-        {NAV_ITEMS.map((item) => {
+      <ul
+        className="grid h-bottom-nav"
+        style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
+      >
+        {items.map((item) => {
           const active = isNavItemActive(item.href, pathname);
           const Icon = item.icon;
 

@@ -22,9 +22,13 @@
     @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100;
   }
 
-  /* Indicador de foco visível em todos os elementos interativos (WCAG 2.4.7) */
+  /*
+   * Indicador de foco visível em todos os elementos interativos (WCAG 2.4.7).
+   * Cor fixa #ff6c29 (primary-500) nos dois temas — é a cor primária exigida
+   * no requisito de navegação por teclado, não uma variação por tema.
+   */
   :focus-visible {
-    @apply outline-none ring-2 ring-primary-600 ring-offset-2 ring-offset-white dark:ring-primary-400 dark:ring-offset-neutral-950;
+    @apply outline-none ring-[3px] ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-neutral-950;
   }
 
   /* Redução de movimento: preferência do SO ou opção da toolbar (.reduce-motion) */
@@ -53,4 +57,123 @@
   .card {
     @apply rounded-xl border border-neutral-200 bg-white p-5 shadow-card dark:border-neutral-800 dark:bg-neutral-900;
   }
+}
+
+/* Modo impressão do visualizador de certificado: some tudo, exceto o
+   próprio certificado (#certibox-print-area), conforme pedido no MD. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #certibox-print-area,
+  #certibox-print-area * {
+    visibility: visible;
+  }
+
+  #certibox-print-area {
+    position: fixed;
+    inset: 0;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  /* Botões/feedback de ação (Imprimir, Enviar ao Professor) ficam dentro da
+     área de impressão só para poder aparecer "acima dos certificados" na
+     tela, mas nunca devem ir parar no PDF/impressão. */
+  .certibox-print-hide {
+    display: none !important;
+  }
+}
+
+/*
+ * Alto contraste (Toolbar de acessibilidade — ver AccessibilityToolbar).
+ *
+ * Em vez de recriar cada componente com uma paleta paralela, sobrescreve os
+ * tons neutros usados no app para os extremos (preto/branco), mantendo a cor
+ * primária como único destaque — é assim que o requisito descreve o modo
+ * ("alternar para alto contraste"). `[class~="..."]` casa só com a classe
+ * EXATA (um "token" inteiro, separado por espaço) — por isso pega
+ * `bg-neutral-900` e `dark:bg-neutral-900`, mas não `hover:bg-neutral-900`
+ * (token diferente): estados de hover continuam só no hover, como o normal.
+ */
+:root[data-contrast="high"] {
+  --certibox-contrast-fg: #000000;
+  --certibox-contrast-bg: #ffffff;
+}
+
+:root.dark[data-contrast="high"] {
+  --certibox-contrast-fg: #ffffff;
+  --certibox-contrast-bg: #000000;
+}
+
+[data-contrast="high"] body {
+  background-color: var(--certibox-contrast-bg) !important;
+  color: var(--certibox-contrast-fg) !important;
+}
+
+[data-contrast="high"]
+  :is(
+    [class~="bg-neutral-50"],
+    [class~="bg-neutral-100"],
+    [class~="bg-neutral-200"],
+    [class~="bg-neutral-900"],
+    [class~="bg-neutral-950"],
+    [class~="bg-white"],
+    [class~="dark:bg-neutral-100"],
+    [class~="dark:bg-neutral-800"],
+    [class~="dark:bg-neutral-900"],
+    [class~="dark:bg-neutral-950"]
+  ) {
+  background-color: var(--certibox-contrast-bg) !important;
+}
+
+[data-contrast="high"]
+  :is(
+    [class~="text-neutral-400"],
+    [class~="text-neutral-500"],
+    [class~="text-neutral-600"],
+    [class~="text-neutral-700"],
+    [class~="text-neutral-800"],
+    [class~="text-neutral-900"],
+    [class~="text-neutral-950"],
+    [class~="dark:text-neutral-100"],
+    [class~="dark:text-neutral-200"],
+    [class~="dark:text-neutral-300"],
+    [class~="dark:text-neutral-400"],
+    [class~="dark:text-neutral-500"],
+    [class~="dark:text-neutral-600"],
+    [class~="dark:text-neutral-900"]
+  ) {
+  color: var(--certibox-contrast-fg) !important;
+}
+
+[data-contrast="high"]
+  :is(
+    [class~="border-neutral-100"],
+    [class~="border-neutral-200"],
+    [class~="border-neutral-300"],
+    [class~="dark:border-neutral-700"],
+    [class~="dark:border-neutral-800"],
+    [class~="dark:border-neutral-900"],
+    [class~="ring-neutral-200"],
+    [class~="dark:ring-neutral-800"]
+  ) {
+  border-color: var(--certibox-contrast-fg) !important;
+  border-width: 2px !important;
+}
+
+/* divide-* do Tailwind estiliza os FILHOS (> :not([hidden]) ~ :not([hidden])),
+   não o próprio elemento — o seletor precisa repetir esse combinador. */
+[data-contrast="high"] [class~="divide-neutral-100"] > :not([hidden]) ~ :not([hidden]),
+[data-contrast="high"] [class~="dark:divide-neutral-900"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--certibox-contrast-fg) !important;
+}
+
+/* Links e textos sublinháveis ganham sublinhado extra no alto contraste,
+   já que nem todo texto vai depender só da cor para ser identificado como
+   interativo. */
+[data-contrast="high"] a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }

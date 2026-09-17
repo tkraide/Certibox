@@ -1,3 +1,4 @@
+import { AccessibilityToolbar } from "@/components/accessibility/accessibility-toolbar";
 import { Brand } from "@/components/navigation/brand";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { UserMenu } from "@/components/auth/user-menu";
@@ -14,6 +15,7 @@ export function Header() {
       <span className="hidden md:block" aria-hidden="true" />
 
       <div className="flex items-center gap-3">
+        <AccessibilityToolbar />
         <ThemeToggle />
         <UserMenu />
       </div>

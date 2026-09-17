@@ -4,13 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 import { UserMenu } from "@/components/auth/user-menu";
 
 import { Brand } from "./brand";
-import { NAV_ITEMS, isNavItemActive } from "./nav-items";
+import { getNavItemsForRole, isNavItemActive } from "./nav-items";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { user } = useAuth();
+  const items = getNavItemsForRole(user?.role);
 
   return (
     <aside
@@ -25,7 +28,7 @@ export function Sidebar() {
 
       <nav aria-label="Navegação principal" className="flex-1 overflow-y-auto px-3 py-4">
         <ul className="space-y-1">
-          {NAV_ITEMS.map((item) => {
+          {items.map((item) => {
             const active = isNavItemActive(item.href, pathname);
             const Icon = item.icon;
 
@@ -72,9 +75,6 @@ export function Sidebar() {
 
       <div className="border-t border-neutral-200 px-6 py-4 dark:border-neutral-800">
         <UserMenu className="flex-col items-start gap-2" />
-        <p className="mt-3 text-xs text-neutral-500 dark:text-neutral-500">
-          Hackathon SeCoT XVIII · UFSCar
-        </p>
       </div>
     </aside>
   );

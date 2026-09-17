@@ -15,10 +15,9 @@ export function LogoutButton({ className }: { className?: string }) {
   async function handleLogout() {
     setLoading(true);
 
-    // Limpa mock do SIGA
-    localStorage.removeItem("certibox_mock_session");
-
-    // Limpa sessão do Supabase (Google)
+    // Login Google e login SIGA (simulado) são, hoje, os dois sessões reais
+    // do Supabase Auth (OAuth e anônima, respectivamente) — um único
+    // signOut() encerra qualquer uma das duas.
     await supabase.auth.signOut();
 
     router.push("/login");

@@ -1,11 +1,10 @@
 "use client";
 
-import { UserCircle } from "lucide-react";
-
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 import { LogoutButton } from "./logout-button";
+import { UserAvatar } from "./user-avatar";
 
 export function UserMenu({ className }: { className?: string }) {
   const { user, loading } = useAuth();
@@ -20,24 +19,16 @@ export function UserMenu({ className }: { className?: string }) {
 
   return (
     <div className={cn("flex items-center gap-3", className)}>
-      <div className="hidden text-right sm:block">
-        <p className="text-sm font-medium leading-tight">{user.name ?? user.email}</p>
-        <p className="text-xs capitalize text-neutral-500 dark:text-neutral-400">
-          {user.role}
-        </p>
-      </div>
+      <div className="flex min-w-0 items-center gap-3 self-stretch">
+        <UserAvatar src={user.avatar} sizeClassName="h-9 w-9" iconSizeClassName="h-6 w-6" />
 
-      {user.avatar ? (
-        <img
-          src={user.avatar}
-          alt=""
-          className="h-9 w-9 rounded-full object-cover ring-2 ring-neutral-200 dark:ring-neutral-800"
-        />
-      ) : (
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-400">
-          <UserCircle className="h-6 w-6" aria-hidden="true" />
+        <div className="hidden min-w-0 flex-1 text-left sm:block">
+          <p className="truncate text-sm font-medium leading-tight">{user.name ?? user.email}</p>
+          <p className="text-xs capitalize text-neutral-500 dark:text-neutral-400">
+            {user.role}
+          </p>
         </div>
-      )}
+      </div>
 
       <LogoutButton />
     </div>
