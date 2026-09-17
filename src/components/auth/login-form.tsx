@@ -107,12 +107,7 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-sm space-y-6">
       <div className="text-center">
-        <span
-          aria-hidden="true"
-          className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500 text-xl font-bold text-neutral-950"
-        >
-          C
-        </span>
+        <img src="/logo.svg" alt="" aria-hidden="true" className="mx-auto h-16 w-16" />
         <h1 className="mt-4 text-2xl font-semibold tracking-tight">CertiBox</h1>
         <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
           Gestão de horas complementares e de extensão
