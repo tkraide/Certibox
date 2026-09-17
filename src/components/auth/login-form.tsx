@@ -54,7 +54,9 @@ export function LoginForm() {
     const trimmed = email.trim().toLowerCase();
 
     if (!trimmed.endsWith("@estudante.ufscar.br") && !trimmed.endsWith("@ufscar.br")) {
-      setError("Use um e-mail institucional da UFSCar (@estudante.ufscar.br ou @ufscar.br).");
+      setError(
+        "Use um e-mail institucional da UFSCar (@estudante.ufscar.br ou @ufscar.br) se quiser uma conta com permissão de aluno ou de professor respectivamente. Como este é um login simulado, pode inventar um e-mail nesse formato — ele será salvo no banco de dados.",
+      );
       setLoadingSiga(false);
       return;
     }

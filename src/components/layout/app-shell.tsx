@@ -2,9 +2,11 @@
 
 import { usePathname } from "next/navigation";
 
+import { AccessibilityToolbar } from "@/components/accessibility/accessibility-toolbar";
 import { VLibrasWidget } from "@/components/accessibility/vlibras-widget";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { Sidebar } from "@/components/navigation/sidebar";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 import { Header } from "./header";
 
@@ -26,6 +28,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   if (isChromeless) {
     return (
       <div className="min-h-dvh bg-neutral-50 dark:bg-neutral-950">
+        {/*
+          Sem Header aqui (ver comentário acima), mas quem ainda não entrou
+          também precisa ajustar tema e preferências de acessibilidade — os
+          dois controles flutuam no canto, sem reservar altura no layout
+          centralizado da tela de login.
+        */}
+        <div className="fixed right-4 top-4 z-40 flex items-center gap-3">
+          <AccessibilityToolbar />
+          <ThemeToggle />
+        </div>
+
         <VLibrasWidget />
         {children}
       </div>
