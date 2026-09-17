@@ -54,6 +54,11 @@ export function CertificatesPageContent() {
         }
       />
 
+      <p className="-mt-4 mb-6 text-xs text-neutral-500 dark:text-neutral-500">
+        O link copiado em <strong>Gerar link compartilhável</strong> abre a página de aprovação —
+        é o que você envia para o professor revisar e aprovar ou rejeitar seus certificados.
+      </p>
+
       {!loaded ? (
         <div className="card flex items-center justify-center gap-2 py-10 text-sm text-neutral-500 dark:text-neutral-500">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
