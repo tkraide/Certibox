@@ -40,7 +40,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <VLibrasWidget />
-        {children}
+        <main>{children}</main>
       </div>
     );
   }

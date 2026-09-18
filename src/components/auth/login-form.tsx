@@ -143,7 +143,7 @@ export function LoginForm() {
         )}
         Entrar com Google
       </button>
-      <p className="-mt-3 text-center text-xs text-neutral-500 dark:text-neutral-500">
+      <p className="-mt-3 text-center text-xs text-neutral-500 dark:text-neutral-400">
         Disponível apenas para e-mail institucional da UFSCar
       </p>
 

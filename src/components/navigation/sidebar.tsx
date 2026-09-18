@@ -58,7 +58,7 @@ export function Sidebar() {
                         className={cn(
                           "text-xs font-normal",
                           active
-                            ? "text-primary-700/80 dark:text-primary-400/80"
+                            ? "text-primary-700 dark:text-primary-400"
                             : "text-neutral-600 dark:text-neutral-400",
                         )}
                       >

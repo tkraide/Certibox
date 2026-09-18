@@ -28,7 +28,7 @@ export function SummaryCards({
               Horas aprovadas
             </p>
             <p className="mt-1 text-3xl font-semibold tracking-tight">{approvedHours}h</p>
-            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-500">
+            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
               de {totalRequiredHours}h necessárias no total
             </p>
           </div>
@@ -54,7 +54,7 @@ export function SummaryCards({
               Horas pendentes
             </p>
             <p className="mt-1 text-3xl font-semibold tracking-tight">{pendingHours}h</p>
-            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-500">
+            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
               aguardando aprovação do professor
             </p>
           </div>
