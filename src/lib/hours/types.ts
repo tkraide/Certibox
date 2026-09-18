@@ -28,4 +28,11 @@ export type Certificate = {
   fileName: string;
   /** Data/hora de envio (created_at). */
   uploadedAt: string;
+  /**
+   * Código público do comprovante verificável (codigo_verificacao) — só
+   * existe depois que o certificado é aprovado. É o que vira o link/QR code
+   * em `/verificar/[codigo]`, uma página sem login que confirma a aprovação
+   * para quem recebe o comprovante (ex.: recrutador de estágio).
+   */
+  verificationCode: string | null;
 };

@@ -16,8 +16,9 @@ import { Header } from "./header";
 // de login) fazendo a página precisar de scroll para centralizar o
 // formulário. Nessas rotas a página é renderizada sozinha, ocupando a tela
 // inteira, e o widget do VLibras continua disponível (acessibilidade vale
-// também para quem ainda não entrou).
-const CHROMELESS_ROUTES = ["/login"];
+// também para quem ainda não entrou). "/verificar" (comprovante verificável)
+// entra pelo mesmo motivo: quem abre o link nunca teve conta no CertiBox.
+const CHROMELESS_ROUTES = ["/login", "/verificar"];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

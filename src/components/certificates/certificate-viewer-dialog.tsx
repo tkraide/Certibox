@@ -11,6 +11,7 @@ import { useCertificateFileUrl } from "@/hooks/use-certificate-file-url";
 import { Dialog, type DialogHandle } from "@/components/ui/dialog";
 
 import { CertificateStatusBadge } from "./certificate-status-badge";
+import { VerificationQr } from "./verification-qr";
 
 /**
  * Visualização em tela cheia (clique na miniatura). O conteúdo de dentro de
@@ -92,6 +93,10 @@ export function CertificateViewerDialog({
               />
             )}
           </div>
+
+          {certificate.status === "aprovado" && certificate.verificationCode && (
+            <VerificationQr code={certificate.verificationCode} />
+          )}
 
           <div className="flex justify-end">
             <button

@@ -23,6 +23,7 @@ type CertificateRow = {
   status: CertificateStatus;
   created_at: string;
   updated_at: string;
+  codigo_verificacao: string | null;
 };
 
 // Cache em memória (módulo) do mapeamento chave <-> id da categoria — só
@@ -57,6 +58,7 @@ function mapRow(row: CertificateRow, categoryKey: CategoryKey): Certificate {
     filePath: row.arquivo_url,
     fileName: row.arquivo_nome,
     uploadedAt: row.created_at,
+    verificationCode: row.codigo_verificacao,
   };
 }
 
@@ -305,4 +307,50 @@ export async function getStudentByShareToken(
 
   if (error || !data) return null;
   return { id: data.id as string, email: data.email as string };
+}
+
+/** Dados exibidos na página pública de comprovante verificável. */
+export type CertificateVerification = {
+  title: string;
+  hours: number;
+  category: string;
+  studentName: string;
+  professorName: string;
+  approvedAt: string;
+};
+
+type VerificationRow = {
+  titulo: string;
+  carga_horaria: number;
+  categoria: string;
+  aluno_nome: string;
+  professor_nome: string;
+  aprovado_em: string;
+};
+
+/**
+ * Consulta pública e sem login o código de um comprovante verificável, via a
+ * função `verificar_certificado` (SECURITY DEFINER, liberada pro papel
+ * "anon" — ver migration `add_certificate_verification_code`). Funciona com
+ * qualquer client Supabase, autenticado ou não: quem abre o QR code de um
+ * comprovante nunca tem sessão no CertiBox.
+ */
+export async function verifyCertificateCode(
+  supabase: SupabaseClient,
+  code: string,
+): Promise<CertificateVerification | null> {
+  const { data, error } = await supabase.rpc("verificar_certificado", { p_codigo: code });
+  if (error) return null;
+
+  const row = (data as VerificationRow[] | null)?.[0];
+  if (!row) return null;
+
+  return {
+    title: row.titulo,
+    hours: row.carga_horaria,
+    category: row.categoria,
+    studentName: row.aluno_nome,
+    professorName: row.professor_nome,
+    approvedAt: row.aprovado_em,
+  };
 }

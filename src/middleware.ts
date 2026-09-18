@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
-const PUBLIC_ROUTES = ["/login", "/auth/callback", "/_next", "/favicon.ico"];
+// "/verificar" é o comprovante verificável (QR code de um certificado
+// aprovado) — precisa ser público de propósito: quem abre o link é um
+// terceiro (ex.: recrutador de estágio) que nunca teve conta no CertiBox.
+const PUBLIC_ROUTES = ["/login", "/auth/callback", "/verificar", "/_next", "/favicon.ico"];
 
 function isPublicRoute(pathname: string) {
   return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
