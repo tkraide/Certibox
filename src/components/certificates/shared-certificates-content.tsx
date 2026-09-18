@@ -53,6 +53,29 @@ export function SharedCertificatesContent({ token }: { token: string }) {
   const [viewing, setViewing] = useState<Certificate | null>(null);
   const [rejecting, setRejecting] = useState<Certificate | null>(null);
 
+  // Best-effort: avisa o aluno por e-mail que o status mudou. Nunca deve
+  // travar a aprovação/rejeição em si (que já foi salva antes desta
+  // chamada) — por isso o erro só vai pro console.
+  function notifyStatusChange(
+    certificate: Certificate,
+    status: "aprovado" | "rejeitado",
+    reason?: string,
+  ) {
+    if (!student) return;
+    fetch("/api/notify-status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        studentEmail: student.email,
+        certificateTitle: certificate.title,
+        status,
+        reason,
+      }),
+    }).catch((err) => {
+      console.error("CertiBox: falha ao notificar aluno por e-mail.", err);
+    });
+  }
+
   const isProfessor = user?.role === "professor";
   const isOwner = Boolean(user && student && user.id === student.id);
 
@@ -127,7 +150,10 @@ export function SharedCertificatesContent({ token }: { token: string }) {
               ? (certificate) => (
                   <CertificateReviewActions
                     certificate={certificate}
-                    onApprove={() => updateCertificateStatus(certificate.id, "aprovado")}
+                    onApprove={() => {
+                      updateCertificateStatus(certificate.id, "aprovado");
+                      notifyStatusChange(certificate, "aprovado");
+                    }}
                     onReject={() => setRejecting(certificate)}
                   />
                 )
@@ -143,6 +169,7 @@ export function SharedCertificatesContent({ token }: { token: string }) {
         onConfirm={(reason) => {
           if (rejecting) {
             updateCertificateStatus(rejecting.id, "rejeitado", reason);
+            notifyStatusChange(rejecting, "rejeitado", reason);
           }
           setRejecting(null);
         }}

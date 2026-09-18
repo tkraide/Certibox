@@ -48,6 +48,30 @@ export function useCertificates() {
     refresh();
   }, [refresh]);
 
+  // Tempo real: quando o professor aprova/rejeita em outra aba/dispositivo,
+  // a lista do aluno atualiza sozinha, sem precisar dar refresh na página.
+  // O RLS da tabela já garante que só linhas do próprio aluno chegam aqui,
+  // mas o filtro abaixo evita já de saída receber eventos de outros alunos.
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel(`certificates-aluno-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "certificates", filter: `aluno_id=eq.${user.id}` },
+        () => {
+          refresh();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, refresh]);
+
   const addCertificate = useCallback(
     async (input: UploadCertificateInput) => {
       if (!user) throw new Error("Você precisa estar logado.");

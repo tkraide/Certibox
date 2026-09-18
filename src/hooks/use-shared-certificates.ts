@@ -41,6 +41,29 @@ export function useSharedCertificates(studentId: string | null) {
     refresh();
   }, [refresh]);
 
+  // Tempo real: se o aluno enviar um novo certificado enquanto o professor
+  // está com essa página aberta (ou o próprio aluno em outra aba), a lista
+  // atualiza sozinha.
+  useEffect(() => {
+    if (!studentId) return;
+
+    const channel = supabase
+      .channel(`shared-certificates-${studentId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "certificates", filter: `aluno_id=eq.${studentId}` },
+        () => {
+          refresh();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [studentId, refresh]);
+
   const updateCertificateStatus = useCallback(
     async (id: string, status: CertificateStatus, reason?: string) => {
       if (status === "pendente") return;

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
 import { AppShell } from "@/components/layout/app-shell";
+import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
@@ -62,6 +63,7 @@ export default function RootLayout({
             `,
           }}
         />
+        <ServiceWorkerRegister />
         <ThemeProvider>
           <AppShell>{children}</AppShell>
         </ThemeProvider>
